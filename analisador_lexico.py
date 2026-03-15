@@ -131,3 +131,77 @@ def estado_numero(texto, pos):
 
     lexema = texto[inicio:pos]
     return Token(TOKEN_NUMBER, lexema), pos
+
+# ===== Método Estado Operador =====
+'''
+Esse método reconhece +, -, *, /, //, %, ^
+OBS: '-' pode ser número negativo, a ordem de tentativa no despachante garante que o número é tentado ANTES do operador isolado.
+'''
+def estado_operador(texto, pos):
+    c = _peek(texto, pos)
+    if c == '+':
+        return Token(TOKEN_OP, '+'), pos + 1
+
+    if c == '-':
+        return Token(TOKEN_OP, '-'), pos + 1
+
+    if c == '*':
+        return Token(TOKEN_OP, '*'), pos + 1
+
+    if c == '/':
+        pos += 1
+        if _peek(texto, pos) == '/':
+            return Token(TOKEN_OP, '//'), pos + 1
+        return Token(TOKEN_OP, '/'), pos + 1
+
+    if c == '%':
+        return Token(TOKEN_OP, '%'), pos + 1
+    
+    if c == '^':
+        return Token(TOKEN_OP, '^'), pos + 1
+    return False, pos
+
+# ===== Método Estado Identificador =====
+''' Neste método verifica o token, reconhecendo a sequência de letras maiúsculas
+AFD:
+    q0 -> maiúscula -> q1
+    q1 -> maiúscula -> q1
+    q1 -> outro caractere da sequência -> aceita
+O programa decide se é uma KEYWORD(RES) ou MEMVAR (variável de memória)
+'''
+def estado_identificador(texto, pos):
+    c = _peek(texto, pos)
+    if c is None or not c.isupper():
+        return False, pos
+
+    inicio = pos
+    while pos < len(texto) and texto[pos].isupper():
+        pos += 1
+
+    # Verificar mistura inválida de maiúsculas/minúsculas/dígitos
+    if pos < len(texto) and (texto[pos].islower() or texto[pos].isdigit()):
+        while pos < len(texto) and texto[pos] not in (' ', '\t', ')', '(', '\n'):
+            pos += 1
+        lexema = texto[inicio:pos]
+        return Token(TOKEN_ERROR, f"Identificador Inválido: '{lexema}'"), pos
+
+    lexema = texto[inicio:pos]
+    if lexema in KEYWORDS:
+        return Token(TOKEN_KEYWORD, lexema), pos
+    return Token(TOKEN_MEMVAR, lexema), pos
+
+# ===== Método Estado Inválido =====
+''' Estado caractere inválido: captura qualquer caractere não reconhecido'''
+def estado_invalido(texto, pos):
+    c = _peek(texto, pos)
+    if c is not None:
+        return Token(TOKEN_ERROR, f"Caractere Inválido: '{c}'"), pos + 1
+    return False, pos
+    
+
+# ===== MAIN =====
+def main():
+    print("main")
+
+if __name__ == "__main__":
+    main()
