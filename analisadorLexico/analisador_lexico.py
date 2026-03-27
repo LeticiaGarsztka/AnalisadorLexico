@@ -1,3 +1,18 @@
+''' 
+Nome dos Integrantes deste Grupo:
+- Amanda de Oliveira Barbosa dos Santos
+- Felyppe Pardino da Silva
+- Letícia Izabelly Melnick Garsztka
+
+Nomes dos Usuários no Github (seguindo a ordem alfabética dos integrantes)
+- mdaoliveira
+- felyppepardino
+- LeticiaGarsztka
+
+Nome do Grupo no Ambiente de Aprendizagem Virtual (AVA): RA1 19 RA1
+'''
+
+
 # Aluno 1: Função parseExpressao e Analisador Léxico com Autômato Finito Determinístico
 
 # Implementação do analisador léxico usando Autômatos Finitos Determinísticos com cada estado como uma função.
